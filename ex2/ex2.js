@@ -74,41 +74,23 @@ async function main() {
         return 'https://jsonplaceholder.typicode.com/posts?id=' + index
     })
 
-    // const urls = [, 'https://jsonplaceholder.typicode.com/posts?id=2', 'https://jsonplaceholder.typicode.com/posts?id=3'];
-
-    // urls.forEach(async url => {
-    //     await timer();
-    //     const response = await axios.get(url);
-    //     console.log(response.data)
-    // })
-
-    const promises = urls.map(async (url) => fetchData(url));
+    const responses = [];
+    for(const url of urls) {
+        console.log('a')
+        try {
+            console.log('b')
+            const response = await axios.get(url, {timeout: 5000});
+            console.log('c')
+            responses.push(response.data);
+        } catch(e) {
+            console.log('d')
+            responses.push('error');
+        }
+    }
     console.log('waiting for promises')
-    const responses = await Promise.all(promises);
-
-    // const avatar = responses[0]
-    // const infos = responses[1]
-    // const pub = responses[2];
-
-    // const responses = [];
-    // for(const url of urls) {
-    //     console.log('a')
-    //     try {
-    //         console.log('b')
-    //         const response = await axios.get(url, {timeout: 5000});
-    //         console.log('c')
-    //         responses.push(response.data);
-    //     } catch(e) {
-    //         console.log('d')
-    //         responses.push('error');
-    //     }
-    // }
-    // console.log('waiting for promises')
     
 
-    const avatar = responses[0]
-    const infos = responses[1]
-    const pub = responses[2];
+    const [avatar, infos, pub] = responses;
 
     const endAt = Date.now();
 
