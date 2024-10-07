@@ -1,14 +1,4 @@
 <template>
-    <!-- <div class="comments">
-        <h2>Les commentaires</h2>
-        <p>{{ comments }}</p>
-        <h1>names</h1>
-        <p>{{ names }}</p>
-        <h1>emails</h1>
-        <p>{{ emails }}</p>
-        <h1>bodies</h1>
-        <p>{{ bodies }}</p>
-    </div> -->
     <div class="container">
         <div class="row">
             <div v-for="comment in comments" :key="comment.id" class="col-md-3">
@@ -37,9 +27,6 @@ export default {
     data() {
         return {
             comments: [],
-            // names: [],
-            // emails: [],
-            // bodies: [],
         };
     },
     created() {
@@ -51,9 +38,6 @@ export default {
                 // const responses = await axios.get('https://jsonplaceholder.typicode.com/comments');
                 const responses = await axios.get('http://192.168.107.121:3000/comments');
                 this.comments = responses.data;
-                // this.names = this.comments.map(comment => comment.name)
-                // this.emails = this.comments.map(comment => comment.email)
-                // this.bodies = this.comments.map(comment => comment.body)
             } catch (err) {
                 console.error('Error!', err);
             }
