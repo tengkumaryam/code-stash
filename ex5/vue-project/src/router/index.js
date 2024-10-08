@@ -32,13 +32,15 @@ const routes = [
     name: 'DetailsView',
     component: DetailsView,
     beforeEnter: (to, from, next) => {
+
+
       const { id } = to.params;
       // axios.get(`https://jsonplaceholder.typicode.com/comments/${id}`)
-      axios.get(`https://192.168.107.121:3000/comments/${id}`)
+      axios.get(`http://192.168.107.121:3000/comments/${id}`)
         .then(reponse => {
           if (reponse.status === 200) {
-            next();
-          } else {
+            next(); }
+          else {
             next({ name: 'ErrorPage' });
           }
         })
@@ -46,10 +48,16 @@ const routes = [
           console.error('Error:', error);
           next({ name: 'ErrorPage' });
         });
+
     },
   },
   {
     path: '/error',
+    name: 'ErrorPage',
+    component: ErrorPage
+  },
+  {
+    path: '*',
     name: 'ErrorPage',
     component: ErrorPage
   },
