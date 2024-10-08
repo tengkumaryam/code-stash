@@ -7,6 +7,7 @@ const listComments = async(req, res, next) => {
         res.send(response.data);
     } catch (error) {
         console.error('Page not found!', error);
+        // console.error('Page not found!');
         next(error); 
     }
 };
@@ -17,7 +18,8 @@ const listCommentId = async(req, res, next) => {
         const response = await axios.get(`https://jsonplaceholder.typicode.com/comments/${id}`);
         res.send(response.data);
     } catch (error) {
-        console.error('Id not found', error);
+        // console.error('Id not found', error);
+        console.error('Id not found');
         next(error);
     }
 };

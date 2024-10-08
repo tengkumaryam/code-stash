@@ -16,7 +16,7 @@ app.use('/comments', route);
 // });
 
 app.use((err, req, res, next) => {
-    console.error(err);
+    // console.error(err);
     if (err.status === 400) {
         return res.status(400).send('Bad Request');
     } else if (err.status === 404) {
