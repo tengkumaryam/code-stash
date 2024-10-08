@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    </head>
+    <body>
+        <div id="app">
+          <h1> - This one's a normal HTML h1 header</h1>
+       </div>
+    
+        <div id="app-1">
+          <p>{{ message }}</p>
+        </div>
+    
+        <div id="app-2">
+          <span v-bind:title="message"> Hover the mouse over <u>me</u> for a few seconds! </span>
+        </div>
+    
+        <div id="app-3">
+          <h3><i>Here's a list made of vue's loop, "v-for" :</i></h3>
+          <ol>
+            <li v-for="todo in todos"> {{todo.name}} : {{todo.count}} </li>
+          </ol>
+          <p>The total count is {{totalCount}}</p>
+        </div>
+    
+        <div id="app-4">
+          <!--<p>{{message}}</p>-->
+          <input v-model="message">
+        </div>
+    
+        <footer id="app-5">
+          <p><em>{{copyright}}</em></p>
+        </footer>
+    
+        <script src="index.js"></script>
+      </body>
+</html>
