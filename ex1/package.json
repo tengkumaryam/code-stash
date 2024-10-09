@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "expres": "^0.0.5",
+    "express": "^4.21.0",
+    "http-server": "^14.1.1",
+    "mariadb": "^3.3.2",
+    "vue": "^2.7.16"
+  }
+}

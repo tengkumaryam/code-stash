@@ -1,0 +1,16 @@
+{
+  "name": "html-js-project",
+  "version": "1.0.0",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "code-stash"
+  },
+  "author": "maryam",
+  "license": "ISC",
+  "description": ""
+}
