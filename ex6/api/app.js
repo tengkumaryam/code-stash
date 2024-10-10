@@ -1,15 +1,12 @@
 const express = require('express');
-const axios = require('axios');
-const app = express();
-
 const cors = require('cors');
-const con = require('./connection');
-const commentRepository = require('./repositories/commentRepository');
+const app = express();
+const route = require('./routes/index');
 const { checkIfTableIsEmpty } = require('./repositories/commentRepository');
-const { getAllComments } = require('./repositories/commentRepository');
 
 app.use(cors());
 app.use(express.json());
+app.use('/', route);
 
 const port = 4000;
 
@@ -35,24 +32,20 @@ async function fetchComments() {
         }
     })
 }
+
+app.use((err, req, res, next) => {
+    if (err.status === 400) {
+        return res.status(400).send('Bad Request');
+    } else if (err.status === 404) {
+        return res.status(404).send('Not Found');
+    } else if (err.status === 410) {
+        return res.status(410).send('Gone');
+    } else if (err.status === 410) {
+        return res.status(500).send('Internal Server Error');
+    }
+});
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
     fetchComments();
-});
-
-
-
-app.get('/', (req, res) => {
-    // res.send('API running..');
-    getAllComments((err, comments) => {
-        if (err) {
-            return res.status(500).send('Error!');
-        }
-        let html = '<h2>Comments</h2><ul>';
-        comments.forEach(comment => {
-            html += `<li><strong>${comment.name}</strong> (${comment.email}): ${comment.body}</li><br>`;
-        });
-        html += '</ul>';
-        res.send(html);
-    });
 });

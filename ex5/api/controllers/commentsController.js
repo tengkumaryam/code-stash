@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Comment = require('../models/comment');
+const comment = require('../models/comment');
 
 const listComments = async(req, res, next) => {
     try {
