@@ -1,8 +1,9 @@
 const express = require('express');
-const cors = require('cors');
+const axios = require('axios');
 const app = express();
 const route = require('./routes/index');
-const { checkIfTableIsEmpty } = require('./repositories/commentRepository');
+const cors = require('cors');
+const { checkIfTableIsEmpty, addComment } = require('./repositories/commentRepository');
 
 app.use(cors());
 app.use(express.json());
@@ -18,19 +19,24 @@ async function fetchComments() {
             const comments = response.data;
             let i = 1;
             for (const comment of comments) {
-                commentRepository.addComment({
-                    id: comment.id,
-                    name: comment.name,
-                    email: comment.email,
-                    body: comment.body
+                await new Promise((resolve) => {
+                    addComment({
+                        id: comment.id,
+                        name: comment.name,
+                        email: comment.email,
+                        body: comment.body
+                    },
+                        () => {
+                            console.log(`${i} data recorded`);
+                            resolve();
+                        });
                 });
-                console.log(`${i} data recorded`);
                 i++;
             }
         } else {
             console.log("Table is not empty");
         }
-    })
+    });
 }
 
 app.use((err, req, res, next) => {

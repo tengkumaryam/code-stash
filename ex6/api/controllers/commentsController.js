@@ -1,4 +1,3 @@
-const axios = require('axios');
 const comment = require('../models/comment');
 const { getAllComments, getCommentById, addComment } = require('../repositories/commentRepository');
 
@@ -6,7 +5,7 @@ const listComments = async (req, res, next) => {
     try {
         getAllComments((err, comments) => {
             if (err) {
-                return res.status(500).send('Error!');
+                return res.send('Error!');
             }
             res.send(comments);
         });
@@ -35,6 +34,7 @@ const listCommentId = async (req, res, next) => {
 const listNewComment = async (req, res, next) => {
     try {
         const newComment = {
+            id: req.body.id,
             name: req.body.name,
             email: req.body.email,
             body: req.body.body,
@@ -42,12 +42,12 @@ const listNewComment = async (req, res, next) => {
 
         addComment(newComment, (err, result) => {
             if (err) {
-                res.send('Can\'t add comment due to error below : ', err);
+                res.send('Error!', err);
             }
             res.send('Comment added!');
         });
     } catch (error) {
-        console.error('Can\'t add comment due to error below : ', error);
+        console.error('Can\'t add comment');
         next(error);
     }
 };

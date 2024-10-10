@@ -21,7 +21,7 @@ function getCommentById (id, datas) {
 };
 
 function addComment (comment, datas) {
-    con.query('INSERT INTO comments VALUES (?, ?, ?, ?)', 
+    con.query('INSERT INTO comments (id, name, email, body) VALUES (?, ?, ?, ?)', 
         [comment.id, comment.name, comment.email, comment.body], (err, res) => {
             if (err) {
                 console.error('Error in addComment()', err);
@@ -35,7 +35,7 @@ function checkIfTableIsEmpty (datas) {
         if (err) {
             console.error('Error in checkIfTableIsEmpty()', err);
         }
-        datas(null, res[0].count === 0);
+        datas(res[0].count === 0);
     });
 };
 
