@@ -19,7 +19,7 @@ async function fetchComments() {
         try {
             const response = await axios.get('https://jsonplaceholder.typicode.com/comments?_limit=200');
             const comments = response.data;
-            const toto = comments.map(async (comment, index) => {
+            await comments.map(async (comment, index) => {
                 try {
                     await addComment({
                         id: comment.id,
@@ -30,13 +30,15 @@ async function fetchComments() {
                     console.log(`${index + 1} data recorded`);
                 } catch (error) {
                     console.error('Unable to add comment', error);
+                    throw error;
                 }
             });
         } catch (error) {
             console.error('Unable to display comments', error);
+            throw error;
         }
     } else {
-        console.error('Table is not empty');
+        console.log('Table is not empty');
     }
 }
 
@@ -53,10 +55,10 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, async () => {
-    console.log(`Listening on port ${port}`);
+    console.log(`Listening on port ${port}...`);
     try {
         await fetchComments();
     } catch (error) {
-        console.error('Error!,', error)
+        console.error(`Error! Can't isten on port ${port}...`, error)
     }
 });

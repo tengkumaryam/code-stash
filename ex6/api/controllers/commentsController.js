@@ -1,4 +1,5 @@
 const comment = require('../models/comment');
+const con = require('../db/connection')
 const { getAllComments, getCommentById, addComment } = require('../repositories/commentRepository');
 
 const listComments = async (req, res, next) => {

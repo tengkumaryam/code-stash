@@ -32,11 +32,9 @@ const routes = [
     path: '/comments/:id',
     name: 'DetailsView',
     component: DetailsView,
-    beforeEnter: (to, from, next) => {
-
-
+    beforeEnter: async(to, from, next) => {
       const { id } = to.params;
-      axios.get(`http://192.168.107.121:4000/comments/${id}`)
+      await axios.get(`http://192.168.107.121:4000/comments/${id}`)
         .then(reponse => {
           if (reponse.status === 200) {
             next(); }
