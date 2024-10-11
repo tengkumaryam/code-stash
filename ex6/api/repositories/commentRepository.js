@@ -1,42 +1,58 @@
 const mysql = require('mysql2');
 const con = require('../db/connection');
 
-function getAllComments (datas) {
-    con.query('SELECT * FROM comments', (err, res) => {
-        if (err) {
-            console.error('Error in getAllComments()', err);
-            return datas(err, null);
-        }
-        datas(null, res);
-    });
-};
+// Function form :O
+// const totos= async () => {
+//     return [];
+// }
 
-function getCommentById (id, datas) {
-    con.query('SELECT * FROM comments WHERE id =' + mysql.escape(id), (err, res) => {
-        if (err) {
-            console.error('Error in getCommentByID()', err);
-        }
-        datas(null, res);
-    });
-};
-
-function addComment (comment, datas) {
-    con.query('INSERT INTO comments (id, name, email, body) VALUES (?, ?, ?, ?)', 
-        [comment.id, comment.name, comment.email, comment.body], (err, res) => {
+const getAllComments = () => {
+    return new Promise((resolve, reject) => {
+        con.query('SELECT * FROM comments', (err, res) => {
             if (err) {
-                console.error('Error in addComment()', err);
+                console.error('Error in getAllComments()', err);
+                reject(err);
             }
-            datas(null, res);
+            resolve(res);
         });
+    })
 };
 
-function checkIfTableIsEmpty (datas) {
-    con.query('SELECT COUNT(*) AS count FROM comments', (err, res) => {
-        if (err) {
-            console.error('Error in checkIfTableIsEmpty()', err);
-        }
-        datas(res[0].count === 0);
+const getCommentById = (id) => {
+    return new Promise((resolve, reject) => {
+        con.query('SELECT * FROM comments WHERE id =' + mysql.escape(id), (err, res) => {
+            if (err) {
+                console.error('Error in getCommentByID()', err);
+                reject(err);
+            }
+            resolve(res);
+        });
     });
+};
+
+const addComment = (comment) => {
+    return new Promise((resolve, reject) => {
+        con.query('INSERT INTO comments (id, name, email, body) VALUES (?, ?, ?, ?)',
+            [comment.id, comment.name, comment.email, comment.body], (err, res) => {
+                if (err) {
+                    console.error('Error in addComment()', err);
+                    reject(err);
+                }
+                resolve(res);
+            });
+    })
+};
+
+const checkIfTableIsEmpty = () => {
+    return new Promise((resolve, reject) => {
+        con.query('SELECT COUNT(*) AS count FROM comments', (err, res) => {
+            if (err) {
+                console.error('Error in checkIfTableIsEmpty()', err);
+                reject(err);
+            }
+            resolve(res[0].count === 0);
+        });
+    })
 };
 
 module.exports = {

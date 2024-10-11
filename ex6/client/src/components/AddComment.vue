@@ -2,22 +2,22 @@
     <div>
         <b-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
 
+
             <b-form-group id="input-group-1" label="Your name:" label-for="input-1">
-                <b-form-input id="input-1" v-model="form.name" placeholder="Enter name" required>
-                </b-form-input>
+                <b-form-input id="input-1" v-model="form.name" placeholder="Enter name" required />
             </b-form-group>
 
             <br>
 
             <b-form-group id="input-group-2" label="Email address:" label-for="input-1">
                 <b-form-input id="input-2" v-model="form.email" type="email" placeholder="Enter email"
-                    required></b-form-input>
+                    required />
             </b-form-group>
 
             <br>
 
             <b-form-group id="input-group-3" label="Your comment:" label-for="input-3">
-                <b-form-input id="input-3" v-model="form.body" placeholder="Enter comment" required></b-form-input>
+                <b-form-input id="input-3" v-model="form.body" placeholder="Enter comment" required/>
             </b-form-group>
 
             <br>

@@ -12,31 +12,32 @@ app.use('/', route);
 const port = 4000;
 
 async function fetchComments() {
-    checkIfTableIsEmpty(async (empty) => {
-        if (empty) {
-            console.log("Table is empty");
+    const ifEmpty = await checkIfTableIsEmpty();
+
+    if (ifEmpty) {
+        console.log("Table is empty");
+        try {
             const response = await axios.get('https://jsonplaceholder.typicode.com/comments?_limit=200');
             const comments = response.data;
-            let i = 1;
-            for (const comment of comments) {
-                await new Promise((resolve) => {
-                    addComment({
+            const toto = comments.map(async (comment, index) => {
+                try {
+                    await addComment({
                         id: comment.id,
                         name: comment.name,
                         email: comment.email,
                         body: comment.body
-                    },
-                        () => {
-                            console.log(`${i} data recorded`);
-                            resolve();
-                        });
-                });
-                i++;
-            }
-        } else {
-            console.log("Table is not empty");
+                    });
+                    console.log(`${index + 1} data recorded`);
+                } catch (error) {
+                    console.error('Unable to add comment', error);
+                }
+            });
+        } catch (error) {
+            console.error('Unable to display comments', error);
         }
-    });
+    } else {
+        console.error('Table is not empty');
+    }
 }
 
 app.use((err, req, res, next) => {
@@ -51,7 +52,11 @@ app.use((err, req, res, next) => {
     }
 });
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Listening on port ${port}`);
-    fetchComments();
+    try {
+        await fetchComments();
+    } catch (error) {
+        console.error('Error!,', error)
+    }
 });

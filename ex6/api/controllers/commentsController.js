@@ -3,14 +3,11 @@ const { getAllComments, getCommentById, addComment } = require('../repositories/
 
 const listComments = async (req, res, next) => {
     try {
-        getAllComments((err, comments) => {
-            if (err) {
-                return res.send('Error!');
-            }
-            res.send(comments);
-        });
+        const comments = await getAllComments();
+        res.send(comments);
     } catch (error) {
-        console.error('Page not found!', error);
+        console.error('Error fetching comments:', error);
+        res.status(500).send('Error!');
         next(error);
     }
 };
@@ -18,15 +15,10 @@ const listComments = async (req, res, next) => {
 const listCommentId = async (req, res, next) => {
     const id = req.params.id;
     try {
-        getCommentById(id, (err, comment) => {
-            if (err) {
-                return res.send('Error!');
-            }
-            res.send(comment);
-
-        });
+        const comment = await getCommentById(id);
+        res.send(comment);
     } catch (error) {
-        console.error('Id not found');
+        console.error('Error fetching comment with that ID');
         next(error);
     }
 };
@@ -39,15 +31,10 @@ const listNewComment = async (req, res, next) => {
             email: req.body.email,
             body: req.body.body,
         };
-
-        addComment(newComment, (err, result) => {
-            if (err) {
-                res.send('Error!', err);
-            }
-            res.send('Comment added!');
-        });
+        await addComment(newComment);
+        res.send('Comment added!');
     } catch (error) {
-        console.error('Can\'t add comment');
+        console.error('Error adding comment');
         next(error);
     }
 };
