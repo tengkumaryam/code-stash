@@ -3,8 +3,7 @@
         <button @click="newComment()" class="button-30" role="button">Add a new comment here</button>
         <br><br>
         <div class="searchinput-container">
-            <input class="searchinput" type="text" placeholder="Search for a comment here..." v-model="keyword"
-                @input="handleInputChange" />
+            <input class="searchinput" type="text" placeholder="Search for a comment here..." v-model="keyword" @input="handleInputChange" />
             <button class="clear-button" @click="clearSearch">x</button>
             <button class="search-button" @click="filterComments">Search</button>
         </div>
@@ -38,6 +37,7 @@ export default {
     },
     created() {
         this.fetchComments();
+        this.loadSearch();
     },
     methods: {
         async fetchComments() {
@@ -82,6 +82,18 @@ export default {
             }
         },
 
+        saveKeyword() {
+            localStorage.setItem('searchKeyword', this.keyword);
+        },
+
+        loadSearch() {
+            const lastSearch = localStorage.getItem('searchKeyword');
+            if (lastSearch) {
+                this.keyword = lastSearch;
+                this.filterComments();
+            }
+        },
+
         loadComments() {
             this.fetchComments();
         },
@@ -111,12 +123,12 @@ export default {
 }
 
 .searchinput {
-    
+    width: 250px;
 }
 
 .clear-button {
     position: absolute;
-    right: 30%;
+    right: 20%;
     top: 25%;
     justify-content: center;
     align-items: center;
