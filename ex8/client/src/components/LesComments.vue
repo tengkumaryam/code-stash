@@ -1,16 +1,18 @@
 <template>
     <div class="container">
-        <!-- <button @click="newComment()" class="button-30" role="button">Add a new comment here</button> -->
         <div class="searchinput-container">
             <input class="searchinput" type="text" placeholder="Search for a comment here..." v-model="keyword"
                 @input="handleInputChange" />
             <button class="clear-button" @click="clearSearch">x</button>
             <button class="search-button" @click="filterComments">Search</button>
         </div>
-        <br><br>
+
+        <b-pagination class="pageNumbers" v-model="currentPage" align="center" :total-rows="rows" :per-page="perPage" aria-controls="my-data" first-number last-number pills />
+        <p class="mt-3">Current Page: {{ currentPage }}</p>
+
         <div class="row">
-            <div v-for="comment in filteredComments" :key="comment.id" class="col-md-4">
-                <b-card-group columns>
+            <div v-for="comment in paginatedComments" :key="comment.id" class="col-md-4">
+                <b-card-group columns id="my-data" :items="items" :per-page="perPage" :current-page="currentPage" small>
                     <b-card class="card">
                         <h5 class="card-title">{{ comment.name }}</h5>
                         <b-button variant="primary" @click="viewDetails(comment.id)" class="view-button">View
@@ -26,7 +28,6 @@
 
 <script>
 import axios from 'axios';
-// import { BIconArrowLeftSquare } from 'bootstrap-vue';
 const Fuse = require('fuse.js');
 
 export default {
@@ -35,12 +36,30 @@ export default {
         return {
             comments: [],
             filteredComments: [],
-            keyword: ''
+            keyword: '',
+            perPage: 30,
+            currentPage: 1,
         };
     },
     created() {
         this.fetchComments();
         this.loadSearch();
+    },
+    computed: {
+        rows() {
+            return this.filteredComments.length;
+        },
+        paginatedComments() {
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + this.perPage;
+            const result = [];
+
+            for (let i = start; i < end && i < this.filteredComments.length; i++) {
+                result.push(this.filteredComments[i]);
+            }
+
+            return result;
+        }
     },
     methods: {
         async fetchComments() {
@@ -110,12 +129,12 @@ export default {
 
         async deleteComment(id) {
             try {
-                const confirmDelete = confirm('Are you sure you want to delete this comment?');
+                const confirmDelete = confirm('Are you sure you want to delete the comment?');
                 if (!confirmDelete) {
                     return;
                 }
-                const response = await axios.delete(`http://192.168.107.121:4000/comments/${id}`);
-                if (response.status == 200) {
+                const responses = await axios.delete(`http://192.168.107.121:4000/comments/${id}`);
+                if (responses.status == 200) {
                     alert('Comment deleted successfully!');
                     await this.fetchComments();
                 }
@@ -130,6 +149,10 @@ export default {
 </script>
 
 <style scoped>
+.pageNumbers {
+    font-weight: bold;
+}
+
 .comments {
     margin: 10px 0;
     padding: 10px;
@@ -139,6 +162,7 @@ export default {
 .searchinput-container {
     position: relative;
     display: inline-block;
+    margin-bottom: 30px;
 }
 
 .searchinput {
@@ -174,7 +198,6 @@ export default {
 .searchinput--touched+.clear-button:hover {
     display: inline-flex;
 }
-
 
 .card {
     margin: 10px 0;
@@ -215,51 +238,5 @@ export default {
 .card:hover .delete-button {
     display: inline-block;
     margin: 0.5%;
-}
-
-.button-30 {
-    align-items: center;
-    appearance: none;
-    background-color: #faf3fc;
-    border-radius: 4px;
-    border-width: 0;
-    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-    box-sizing: border-box;
-    color: #36395A;
-    cursor: pointer;
-    display: inline-flex;
-    font-family: "JetBrains Mono", monospace;
-    font-weight: bold;
-    height: 48px;
-    justify-content: center;
-    line-height: 1;
-    list-style: none;
-    overflow: hidden;
-    padding-left: 16px;
-    padding-right: 16px;
-    position: relative;
-    text-align: left;
-    text-decoration: none;
-    transition: box-shadow .15s, transform .15s;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    white-space: nowrap;
-    will-change: box-shadow, transform;
-    font-size: 18px;
-}
-
-.button-30:focus {
-    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-}
-
-.button-30:hover {
-    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-    transform: translateY(-2px);
-}
-
-.button-30:active {
-    box-shadow: #D6D6E7 0 3px 7px inset;
-    transform: translateY(2px);
 }
 </style>
