@@ -1,6 +1,6 @@
 const comment = require('../models/comment');
 const con = require('../db/connection')
-const { getAllComments, getCommentById, addComment, updateComment} = require('../repositories/commentRepository');
+const { getAllComments, getCommentById, addComment, updateComment, commentDeletion} = require('../repositories/commentRepository');
 
 const listComments = async (req, res, next) => {
     try {
@@ -43,7 +43,6 @@ const listNewComment = async (req, res, next) => {
 const modifyComment = async (req, res, next) => {
     const id = req.params.id;
     const updatedData = req.body;
-
     try {
         const updatedComment = await updateComment(id, updatedData);
         if (updatedComment) res.send('Comment updated!');
@@ -53,9 +52,25 @@ const modifyComment = async (req, res, next) => {
     }
 };
 
+const deleteComment = async (req, res, next) => {
+    const id = req.params.id;
+    try {
+        const comments = await commentDeletion(id);
+        if (comments.affectedRows > 0) {
+            const connection = await con;
+            await connection.execute('UPDATE comments SET id = id - 1 WHERE id > ?', [id]);
+            res.send('Comment deleted and IDs renumbered successfully!');
+        }
+    } catch (error) {
+        console.error('Error deleting comment:', error);
+        next(error);
+    }
+}
+
 module.exports = {
     listComments,
     listCommentId,
     listNewComment,
-    modifyComment
+    modifyComment,
+    deleteComment
 };

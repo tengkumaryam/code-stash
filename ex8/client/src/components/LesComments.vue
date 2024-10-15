@@ -13,8 +13,10 @@
                 <b-card-group columns>
                     <b-card class="card">
                         <h5 class="card-title">{{ comment.name }}</h5>
-                        <b-button variant="primary" @click="viewDetails(comment.id)" class="button">View
+                        <b-button variant="primary" @click="viewDetails(comment.id)" class="view-button">View
                             details</b-button>
+                        <b-button variant="danger" @click="deleteComment(comment.id)"
+                            class="delete-button">Delete</b-button>
                     </b-card></b-card-group>
             </div>
         </div>
@@ -24,6 +26,7 @@
 
 <script>
 import axios from 'axios';
+// import { BIconArrowLeftSquare } from 'bootstrap-vue';
 const Fuse = require('fuse.js');
 
 export default {
@@ -46,7 +49,7 @@ export default {
                 this.comments = responses.data;
                 this.filteredComments = this.comments;
             } catch (err) {
-                console.error('Error!', err);
+                console.error("Can't display comments :(", err);
             }
         },
 
@@ -85,15 +88,12 @@ export default {
         saveKeyword() {
             // const timer = 600000;
             localStorage.setItem('searchKeyword', this.keyword);
-
-            setTimeout(() => { // not yet working
-                localStorage.removeItem('searchKeyword');
-                console.log("Memory removed")
-            }, 10000);
+            setTimeout(localStorage.removeItem('searchKeyword'), 10000);
         },
 
         loadSearch() {
             const lastSearch = localStorage.getItem('searchKeyword');
+            localStorage.getItem('searchKeyword')
             if (lastSearch) {
                 this.keyword = lastSearch;
                 this.filterComments();
@@ -108,11 +108,24 @@ export default {
             this.$router.push({ name: 'DetailsView', params: { id } });
         },
 
-        newComment() {
-            this.$router.push('/add-comment');
-        }
+        async deleteComment(id) {
+            try {
+                const confirmDelete = confirm('Are you sure you want to delete this comment?');
+                if (!confirmDelete) {
+                    return;
+                }
+                const response = await axios.delete(`http://192.168.107.121:4000/comments/${id}`);
+                if (response.status == 200) {
+                    alert('Comment deleted successfully!');
+                    await this.fetchComments();
+                }
+            } catch (error) {
+                console.error("Can't delete comment :(", error);
+            }
 
-    },
+        }
+    }
+
 };
 </script>
 
@@ -186,13 +199,22 @@ export default {
     padding: 10px;
 }
 
-.button {
+.view-button {
     background-color: rgb(111, 87, 121);
     border: 0;
 }
 
-.button:hover {
+.view-button:hover {
     background-color: pink;
+}
+
+.delete-button {
+    display: none;
+}
+
+.card:hover .delete-button {
+    display: inline-block;
+    margin: 0.5%;
 }
 
 .button-30 {

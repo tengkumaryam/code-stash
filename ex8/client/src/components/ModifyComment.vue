@@ -21,7 +21,7 @@
             <br>
 
             <b-form-group id="input-group-4" label="Your comment:" label-for="input-4">
-                <b-form-input id="input-4" v-model="form.body" placeholder="Enter comment" required/>
+                <b-form-input id="input-4" v-model="form.body" placeholder="Enter comment" required />
             </b-form-group>
 
             <br>
@@ -70,18 +70,11 @@ export default {
         },
 
         async onIdChange(id) {
-            if (id) {
-                const comment = this.comments.find(comment => comment.id === id);
-                if (comment) {
-                    this.form.name = comment.name;
-                    this.form.email = comment.email;
-                    this.form.body = comment.body;
-                }
-            } else {
-                // Clear the form if no ID is selected
-                this.form.name = '';
-                this.form.email = '';
-                this.form.body = '';
+            const comment = this.comments.find(comment => comment.id === id); // finds id match
+            if (comment) {
+                this.form.name = comment.name;
+                this.form.email = comment.email;
+                this.form.body = comment.body;
             }
         },
 
@@ -127,16 +120,13 @@ export default {
         }
     }
 }
-
 </script>
 
 <style scoped>
-
 .form {
     width: 90%;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-
 </style>

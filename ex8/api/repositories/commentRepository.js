@@ -58,77 +58,32 @@ const checkIfTableIsEmpty = async () => {
 
 const updateComment = async (id, updatedData) => {
     const { name, email, body } = updatedData;
-
     try {
         const connection = await con;
-        const [result] = await connection.execute('UPDATE comments SET name = ?, email = ?, body = ? WHERE id = ?', [name, email, body, id]);
-        return result.affectedRows > 0;
+        const [results] = await connection.execute('UPDATE comments SET name = ?, email = ?, body = ? WHERE id = ?', [name, email, body, id]);
+        return results.affectedRows > 0;
     } catch (error) {
         console.error('Error in updateComment()', error);
         throw error;
     }
 };
 
-// const { connect } = require('../routes');
-
-// Function form :O
-// const totos= async () => {
-//     return [];
-// }
-
-// const getAllComments = () => {
-//     return new Promise((resolve, reject) => {
-//         con.query('SELECT * FROM comments', (err, res) => {
-//             if (err) {
-//                 console.error('Error in getAllComments()', err);
-//                 reject(err);
-//             }
-//             resolve(res);
-//         });
-//     })
-// };
-
-// const getCommentById = (id) => {
-//     return new Promise((resolve, reject) => {
-//         con.query('SELECT * FROM comments WHERE id =' + mysql.escape(id), (err, res) => {
-//             if (err) {
-//                 console.error('Error in getCommentByID()', err);
-//                 reject(err);
-//             }
-//             resolve(res);
-//         });
-//     });
-// };
-
-// const addComment = (comment) => {
-//     return new Promise((resolve, reject) => {
-//         con.query('INSERT INTO comments (id, name, email, body) VALUES (?, ?, ?, ?)',
-//             [comment.id, comment.name, comment.email, comment.body], (err, res) => {
-//                 if (err) {
-//                     console.error('Error in addComment()', err);
-//                     reject(err);
-//                 }
-//                 resolve(res);
-//             });
-//     })
-// };
-
-// const checkIfTableIsEmpty = () => {
-//     return new Promise((resolve, reject) => {
-//         con.query('SELECT COUNT(*) AS count FROM comments', (err, res) => {
-//             if (err) {
-//                 console.error('Error in checkIfTableIsEmpty()', err);
-//                 reject(err);
-//             }
-//             resolve(res[0].count === 0);
-//         });
-//     })
-// };
+const commentDeletion = async (id) => {
+    try {
+        const connection = await con;
+        const [results] = await connection.execute('DELETE FROM comments WHERE id =' + mysql.escape(id));
+        return results;
+    } catch (error) {
+        console.error('Error in commentDeletion()', error);
+        throw error;
+    }
+};
 
 module.exports = {
     getAllComments,
     getCommentById,
     addComment,
     checkIfTableIsEmpty,
-    updateComment
+    updateComment,
+    commentDeletion
 };

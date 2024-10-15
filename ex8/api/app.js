@@ -13,7 +13,6 @@ const port = 4000;
 
 async function fetchComments() {
     const ifEmpty = await checkIfTableIsEmpty();
-
     if (ifEmpty) {
         console.log("Table is empty");
         try {
