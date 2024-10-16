@@ -2,7 +2,6 @@
     <div>
         <b-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
 
-
             <b-form-group id="input-group-1" label="Your name:" label-for="input-1">
                 <b-form-input id="input-1" v-model="form.name" placeholder="Enter name" required />
             </b-form-group>
@@ -31,6 +30,7 @@
 <script>
 import axios from 'axios';
 
+
 export default {
     data() {
         return {
@@ -56,7 +56,7 @@ export default {
 
             // Send details to API
             try {
-                axios.post('http://localhost:4000/comments', comment);
+                axios.post('http://192.168.107.121:4000/comments', comment);
                 this.submitted = true;
                 alert('Comment added!');
             } catch (error) {
@@ -75,8 +75,8 @@ export default {
             this.form.email = '';
             this.form.body = '';
 
-            this.submitted = false;
-            this.show = false;
+            // this.submitted = false;
+            this.show = true;
 
             // Return to form once submitted
             this.$nextTick(() => {

@@ -12,6 +12,9 @@
             <br />
             <strong>Comment : </strong>
             {{ comment.body }}
+            <br />
+            <strong>Creation date : </strong>
+            {{ comment.date_created }}
         </b-card>
     </div>
 </template>

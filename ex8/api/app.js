@@ -3,6 +3,7 @@ const axios = require('axios');
 const app = express();
 const route = require('./routes/index');
 const cors = require('cors');
+const { faker } = require('@faker-js/faker');
 const { checkIfTableIsEmpty, addComment } = require('./repositories/commentRepository');
 
 app.use(cors());
@@ -20,11 +21,13 @@ async function fetchComments() {
             const comments = response.data;
             await comments.map(async (comment, index) => {
                 try {
+                    const dates = faker.date.between({ from: '2003-03-13', to: Date.now() });
                     await addComment({
                         id: comment.id,
                         name: comment.name,
                         email: comment.email,
-                        body: comment.body
+                        body: comment.body,
+                        date_created: dates
                     });
                     console.log(`${index + 1} data recorded`);
                 } catch (error) {

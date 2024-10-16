@@ -85,12 +85,13 @@ export default {
                 id: this.form.id,
                 name: String(this.form.name),
                 email: String(this.form.email),
-                body: String(this.form.body)
+                body: String(this.form.body),
+                date_created: new Date()
             };
 
             // Send details to API
             try {
-                await axios.put(`http://localhost:4000/comments/${this.form.id}`, comment);
+                await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment);
                 this.submitted = true;
                 alert('Comment updated!');
             } catch (error) {

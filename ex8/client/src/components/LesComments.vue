@@ -1,8 +1,24 @@
 <template>
     <div class="container">
         <div class="searchinput-container">
-            <input class="searchinput" type="text" placeholder="Search for a comment here..." v-model="keyword"
+            <div class="filter">
+                <select v-model="selectedFilter">
+                    <option value="id">Id</option>
+                    <option value="name">Name</option>
+                    <option value="email">Email</option>
+                    <option value="body">Body</option>
+                    <option value="date">Date</option>
+                </select>
+            </div>
+            <input v-if="selectedFilter !== 'date'" class="searchinput" type="text"
+                :placeholder="`Search for a comment's ${selectedFilter} here..`" v-model="keyword"
                 @input="handleInputChange" />
+            <div v-if="selectedFilter === 'date'" class="date-filter">
+                <input type="date" v-model="startDate" placeholder="Start date" class="calendar" />
+                <input type="date" v-model="endDate" placeholder="End date" class="calendar"/>
+            </div>
+            <!-- <input v-if="selectedFilter !== 'date'" class="searchinput" type="text" :placeholder="`Search for a comment's ${selectedFilter} here..`" v-model="keyword" @input="handleInputChange" />
+            <input v-if="selectedFilter === 'date'" class="searchinput" type="text" :placeholder="`yyyy-mm-dd`" v-model="keyword" @input="handleInputChange" /> -->
             <button class="clear-button" @click="clearSearch">x</button>
             <button class="search-button" @click="filterComments">Search</button>
         </div>
@@ -46,8 +62,11 @@ export default {
             comments: [],
             filteredComments: [],
             keyword: '',
-            perPage: 10,
+            perPage: 18,
             currentPage: 1,
+            selectedFilter: 'id',
+            startDate: '',
+            endDate: ''
         };
     },
     created() {
@@ -79,23 +98,12 @@ export default {
             }
         },
 
-        filterComments() {
-            if (this.keyword == '') {
-                this.filteredComments = this.comments;
-                return;
+        handleInputChange(e) {
+            if (e.target.value) {
+                e.target.classList.add("searchinput--touched");
+            } else {
+                e.target.classList.remove("searchinput--touched");
             }
-            const options = {
-                keys: ['name'],
-                threshold: 0.0,
-                findAllMatches: false,
-                ignoreLocation: true,
-            }
-            const fuse = new Fuse(this.comments, options);
-            const result = fuse.search(this.keyword);
-            if (result.length == 0) {
-                alert(`Sorry, comment containing "${this.keyword}" not found`);
-            }
-            this.filteredComments = result.map(item => item.item);
         },
 
         clearSearch() {
@@ -103,12 +111,35 @@ export default {
             this.filteredComments = this.comments;
         },
 
-        handleInputChange(e) {
-            if (e.target.value) {
-                e.target.classList.add("searchinput--touched");
-            } else {
-                e.target.classList.remove("searchinput--touched");
+        filterComments() {
+            this.filteredComments = this.comments;
+
+            if (this.selectedFilter === 'date') {
+                const start = new Date(this.startDate).getTime();
+                const end = new Date(this.endDate).getTime();
+                this.filteredComments = this.filteredComments.filter(comment => {
+                    const date = new Date(comment.date_created).getTime();
+                    return date >= start && date <= end;
+                });
+                if (this.filteredComments.length === 0) {
+                    alert(`Sorry, no comments dated from ${this.startDate} to ${this.endDate} found`);
+                }
             }
+            else {
+                const options = {
+                    keys: [this.selectedFilter],
+                    threshold: 0.0,
+                    findAllMatches: false,
+                    ignoreLocation: true,
+                };
+                const fuse = new Fuse(this.comments, options);
+                const result = fuse.search(this.keyword);
+                if (result.length == 0) {
+                    alert(`Sorry, no comments with ${this.selectedFilter} = "${this.keyword}" were found`);
+                }
+                this.filteredComments = result.map(item => item.item);
+            }
+
         },
 
         saveKeyword() {
@@ -136,8 +167,8 @@ export default {
 
         async deleteComment(id) {
             try {
-                const confirmDelete = confirm('Are you sure you want to delete the comment?');
-                if (!confirmDelete) {
+                const confirmDeletion = confirm('Are you sure you want to delete the comment?');
+                if (!confirmDeletion) {
                     return;
                 }
                 const responses = await axios.delete(`http://192.168.107.121:4000/comments/${id}`);
@@ -167,13 +198,65 @@ export default {
 }
 
 .searchinput-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 1em auto;
+    border: 1px solid #D8D8D8;
+    border-radius: 5px;
+    padding: 0.5em;
+    background: #3E4651;
+}
+
+.filter {
     position: relative;
-    display: inline-block;
-    margin-bottom: 30px;
+    width: 100px;
 }
 
 .searchinput {
-    width: 250px;
+    flex: 1;
+    padding: 0.5em;
+    border: none;
+    border-radius: 5px;
+    margin-right: 0.3em;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+select {
+    width: 100%;
+    padding: 0.5em;
+    border: none;
+    border-radius: 5px;
+    color: #5f635f;
+    appearance: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.filter::after {
+    content: '▼';
+    color: #5f635f;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+select:hover {
+    background: #E1E9DD;
+    color: black;
+}
+
+.searchinput {
+    width: 350px;
+}
+
+.calendar {
+    padding: 6px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 .clear-button {
@@ -187,7 +270,7 @@ export default {
     appearance: none;
     border: none;
     border-radius: 50%;
-    background: gray;
+    background: #B0BEA9;
     margin: 0;
     padding: 2px;
     color: white;
@@ -200,6 +283,21 @@ export default {
     background: darkgray;
 }
 
+.search-button {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    background: #607e70;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    color: #E1E9DD;
+    transform: translateY(-3px);
+    transition: 0.3s;
+}
+
 .searchinput--touched:focus+.clear-button,
 .searchinput--touched:hover+.clear-button,
 .searchinput--touched+.clear-button:hover {
@@ -209,7 +307,7 @@ export default {
 .card {
     margin: 10px 0;
     padding: 5px;
-    background-color: rgb(247, 244, 248);
+    background-color: #E0EDC5;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
@@ -224,13 +322,13 @@ export default {
 .card-title {
     font-size: 1.4rem;
     font-weight: bold;
-    color: #544a63;
+    color: #454e3f;
     text-align: center;
     padding: 10px;
 }
 
 .view-button {
-    background-color: rgb(111, 87, 121);
+    background-color: #92AA83;
     border: 0;
 }
 

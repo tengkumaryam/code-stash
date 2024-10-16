@@ -1,6 +1,10 @@
 const mysql = require('mysql2/promise');
 const con = require('../db/connection');
-const { Parser } = require('json2csv');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
 // const dbPool = require('./dbPool');
 
 const getAllComments = async () => {
@@ -37,8 +41,8 @@ const getCommentById = async (id) => {
 const addComment = async (comment) => {
     try {
         const connection = await con;
-        const [results] = await connection.query('INSERT INTO comments (id, name, email, body) VALUES (?, ?, ?, ?)',
-            [comment.id, comment.name, comment.email, comment.body]);
+        const [results] = await connection.query('INSERT INTO comments (name, email, body, date_created) VALUES (?, ?, ?, ?)',
+            [comment.name, comment.email, comment.body, comment.date_created]);
         return results;
     } catch (error) {
         console.error('Error in addComment()', error);
@@ -79,22 +83,6 @@ const commentDeletion = async (id) => {
         throw error;
     }
 };
-
-// const jsonToCsv = async (jsonData) => {
-//     if (!jsonData || jsonData.length === 0) return '';
-//     const header = Object.keys(jsonData[0]);
-//     const headerString = header.join(',');
-//     // handle null or undefined values here
-//     const replacer = (key, value) => value ?? '';
-//     const rowItems = jsonData.map((row) =>
-//       header
-//         .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-//         .join(',')
-//     );
-//     // join header and body, and break into separate lines
-//     const csv = [headerString, ...rowItems].join('\r\n');
-//     return csv;
-// }
 
 const jsonToCsv = async (jsonData) => {
     if (!jsonData || jsonData.length === 0) return '';

@@ -1,5 +1,10 @@
 const con = require('../db/connection');
+const express = require('express');
+const cors = require('cors');
+const app = express();
 const { getAllComments, getCommentById, addComment, updateComment, commentDeletion, jsonToCsv} = require('../repositories/commentRepository');
+
+app.use(cors());
 
 const listComments = async (req, res, next) => {
     try {
@@ -30,6 +35,7 @@ const listNewComment = async (req, res, next) => {
             name: req.body.name,
             email: req.body.email,
             body: req.body.body,
+            date_created: new Date()
         };
         await addComment(newComment);
         res.send('Comment added!');
@@ -71,7 +77,7 @@ const downloadComment = async (req, res, next) => {
         const comments = await getAllComments();
         const csv = await jsonToCsv(comments);
         res.header('Content-Type', 'text/csv');
-        res.header('Content-Disposition', 'attachment; filename="comments.csv"');
+        res.attachment('comments.csv');
         res.send(csv);
     } catch (error) {
         console.error('Error generating CSV file', error);

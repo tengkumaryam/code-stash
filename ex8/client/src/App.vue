@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="background-color:#F1F7EE;">
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
@@ -51,8 +51,12 @@ nav a {
   margin: 0 15px;
 }
 
+nav a :hover {
+  color:aquamarine;
+}
+
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #92AA83;
 }
 
 .dropdown {
@@ -62,21 +66,21 @@ nav a.router-link-exact-active {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
+  background-color: #e1e7de;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 20px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
 .dropdown-content a {
-  color: black;
+  color: #2c3e50;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 
 .dropdown-content a:hover {
-  background-color: #ddd;
+  background-color: #E7F59E;
 }
 
 .dropdown:hover .dropdown-content {
@@ -89,7 +93,7 @@ nav a.router-link-exact-active {
 }
 
 .footer {
-    background-color: lightgray;
+    background-color: #92AA83;
     width: 100%;
     margin-top: 50px;
     padding: 10px;
@@ -105,7 +109,7 @@ nav a.router-link-exact-active {
 
 .github:hover {
     text-decoration: underline;
-    color: hotpink;
+    color: #E7F59E;
 }
 
 </style>
