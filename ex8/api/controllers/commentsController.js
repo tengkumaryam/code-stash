@@ -1,6 +1,5 @@
-const comment = require('../models/comment');
-const con = require('../db/connection')
-const { getAllComments, getCommentById, addComment, updateComment, commentDeletion} = require('../repositories/commentRepository');
+const con = require('../db/connection');
+const { getAllComments, getCommentById, addComment, updateComment, commentDeletion, jsonToCsv} = require('../repositories/commentRepository');
 
 const listComments = async (req, res, next) => {
     try {
@@ -59,10 +58,24 @@ const deleteComment = async (req, res, next) => {
         if (comments.affectedRows > 0) {
             const connection = await con;
             await connection.execute('UPDATE comments SET id = id - 1 WHERE id > ?', [id]);
-            res.send('Comment deleted and IDs renumbered successfully!');
+            res.send('Comment deleted!');
         }
     } catch (error) {
         console.error('Error deleting comment:', error);
+        next(error);
+    }
+}
+
+const downloadComment = async (req, res, next) => {
+    try {
+        const comments = await getAllComments();
+        const csv = await jsonToCsv(comments);
+        res.header('Content-Type', 'text/csv');
+        res.header('Content-Disposition', 'attachment; filename="comments.csv"');
+        res.send(csv);
+    } catch (error) {
+        console.error('Error generating CSV file', error);
+        res.status(500).send('Error!');
         next(error);
     }
 }
@@ -72,5 +85,6 @@ module.exports = {
     listCommentId,
     listNewComment,
     modifyComment,
-    deleteComment
+    deleteComment,
+    downloadComment
 };

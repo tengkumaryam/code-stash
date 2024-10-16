@@ -5,7 +5,7 @@
   "main": "connection.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,11 @@
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "express": "^4.21.1",
-    "mysql2": "^3.11.3"
+    "json2csv": "^6.0.0-alpha.2",
+    "mysql2": "^3.11.3",
+    "node": "^20.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }

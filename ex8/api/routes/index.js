@@ -1,7 +1,7 @@
 const express = require('express');
-const route = require('./comments');
+const routes = require('./comments');
 const router = express.Router();
 
-router.use('/comments', route);
+router.use('/', routes);
 
 module.exports = router;

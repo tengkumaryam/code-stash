@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "@faker-js/faker": "^9.0.3"
+    "@faker-js/faker": "^9.0.3",
+    "nodemon": "^3.1.7"
   },
   "dependencies": {
     "axios": "^1.7.7"

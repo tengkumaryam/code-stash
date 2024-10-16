@@ -2,10 +2,13 @@ const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
 
-router.get('/', commentsController.listComments);
-router.get('/:id', commentsController.listCommentId);
-router.put('/:id', commentsController.modifyComment);
-router.delete('/:id', commentsController.deleteComment);
-router.post('/', commentsController.listNewComment);
+const basePath = "/comments"
+
+router.get(`${basePath}/`, commentsController.listComments);
+router.get(`${basePath}/:id`, commentsController.listCommentId);
+router.post(`${basePath}/`, commentsController.listNewComment);
+router.put(`${basePath}/:id`, commentsController.modifyComment);
+router.delete(`${basePath}/:id`, commentsController.deleteComment);
+router.get(`${basePath}/download/csv`, commentsController.downloadComment);
 
 module.exports = router;

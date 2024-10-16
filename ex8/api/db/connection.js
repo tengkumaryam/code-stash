@@ -8,12 +8,5 @@ const con = mysql.createConnection({
     port: 3306
 });
 
-// con.connect(err => {
-//     if (err) {
-//         console.error('Error in database connection :(', err);
-//         return;
-//     }
-//     console.log('You are connected to the database!');
-// });
-
 module.exports = con;
+console.log('You are connected to the database!');
