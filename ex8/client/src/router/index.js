@@ -6,6 +6,7 @@ import DetailsView from '../views/DetailsView.vue'
 import ErrorPage from '../views/ErrorPage.vue'
 import AddComment from '../components/AddComment.vue'
 import ModifyComment from '../components/ModifyComment.vue'
+import LoginPage from '../components/LoginPage.vue'
 import axios from 'axios';
 
 Vue.use(VueRouter)
@@ -62,6 +63,11 @@ const routes = [
     component: ModifyComment
   },
   {
+    path: '/login',
+    name: 'LoginPage',
+    component: LoginPage
+  },
+  {
     path: '/error',
     name: 'ErrorPage',
     component: ErrorPage
@@ -71,12 +77,12 @@ const routes = [
     name: 'ErrorPage',
     component: ErrorPage
   },
-]
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
+});
 
 export default router;

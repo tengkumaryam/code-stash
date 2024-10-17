@@ -10,5 +10,6 @@ router.post(`${basePath}/`, commentsController.listNewComment);
 router.put(`${basePath}/:id`, commentsController.modifyComment);
 router.delete(`${basePath}/:id`, commentsController.deleteComment);
 router.get(`${basePath}/download/csv`, commentsController.downloadComment);
+router.post(`login`, commentsController.downloadComment);
 
 module.exports = router;

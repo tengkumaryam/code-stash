@@ -17,8 +17,6 @@
                 <input type="date" v-model="startDate" placeholder="Start date" class="calendar" />
                 <input type="date" v-model="endDate" placeholder="End date" class="calendar"/>
             </div>
-            <!-- <input v-if="selectedFilter !== 'date'" class="searchinput" type="text" :placeholder="`Search for a comment's ${selectedFilter} here..`" v-model="keyword" @input="handleInputChange" />
-            <input v-if="selectedFilter === 'date'" class="searchinput" type="text" :placeholder="`yyyy-mm-dd`" v-model="keyword" @input="handleInputChange" /> -->
             <button class="clear-button" @click="clearSearch">x</button>
             <button class="search-button" @click="filterComments">Search</button>
         </div>
@@ -179,10 +177,8 @@ export default {
             } catch (error) {
                 console.error("Can't delete comment :(", error);
             }
-
         },
     }
-
 };
 </script>
 

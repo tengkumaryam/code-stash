@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
 const axios = require('axios');
 const app = express();
 const route = require('./routes/index');
-const cors = require('cors');
+const jwt =  require ('jsonwebtoken');
 const { faker } = require('@faker-js/faker');
 const { checkIfTableIsEmpty, addComment } = require('./repositories/commentRepository');
 
@@ -21,7 +23,7 @@ async function fetchComments() {
             const comments = response.data;
             await comments.map(async (comment, index) => {
                 try {
-                    const dates = faker.date.between({ from: '2003-03-13', to: Date.now() });
+                    const dates = faker.date.between({ from:'2003-03-13', to: Date.now() });
                     await addComment({
                         id: comment.id,
                         name: comment.name,
@@ -43,6 +45,15 @@ async function fetchComments() {
         console.log('Table is not empty');
     }
 }
+
+const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf8');
+const publicKey = fs.readFileSync('./keys/public_key.pem', 'utf8');
+
+app.post("/login", (req, res) => {
+    const { userId, password } = req.body;
+    const token = jwt.sign({ userId }, privateKey, { algorithm: 'RS256'}); // sign token with private key, ensure its authentic & unchanged
+    res.json({ token });
+});
 
 app.use((err, req, res, next) => {
     if (err.status === 400) {
