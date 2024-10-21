@@ -4,12 +4,37 @@ const fs = require('fs');
 const axios = require('axios');
 const app = express();
 const route = require('./routes/index');
-const jwt =  require ('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const { faker } = require('@faker-js/faker');
 const { checkIfTableIsEmpty, addComment } = require('./repositories/commentRepository');
+const authenticateToken = require('./services/authenticateToken');
 
 app.use(cors());
 app.use(express.json());
+
+// app.use(authenticateToken);
+const commentsRoute = require('./routes/comments');
+app.use('/modify-comment', authenticateToken, commentsRoute);
+app.use('/comments', commentsRoute); // public access to view comments
+
+const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf8');
+
+app.post("/login", (req, res) => {
+    const userId = 'user';
+    const password = 'user';
+
+    if (req.body.userId === userId && req.body.password === password) {
+        const token = jwt.sign({ userId }, privateKey, { algorithm: 'RS256', expiresIn: '1h' });
+        res.json({ token });
+    } else {
+        res.status(401).json({ message: 'Login failed' });
+    }
+});
+
+app.get('/protected', (req, res) => {
+    res.json({ message: 'Successful authentication!', user: req.user });
+});
+
 app.use('/', route);
 
 const port = 4000;
@@ -23,7 +48,7 @@ async function fetchComments() {
             const comments = response.data;
             await comments.map(async (comment, index) => {
                 try {
-                    const dates = faker.date.between({ from:'2003-03-13', to: Date.now() });
+                    const dates = faker.date.between({ from: '2003-03-13', to: Date.now() });
                     await addComment({
                         id: comment.id,
                         name: comment.name,
@@ -45,15 +70,6 @@ async function fetchComments() {
         console.log('Table is not empty');
     }
 }
-
-const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf8');
-const publicKey = fs.readFileSync('./keys/public_key.pem', 'utf8');
-
-app.post("/login", (req, res) => {
-    const { userId, password } = req.body;
-    const token = jwt.sign({ userId }, privateKey, { algorithm: 'RS256'}); // sign token with private key, ensure its authentic & unchanged
-    res.json({ token });
-});
 
 app.use((err, req, res, next) => {
     if (err.status === 400) {

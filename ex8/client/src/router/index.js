@@ -60,7 +60,8 @@ const routes = [
   {
     path: '/modify-comment',
     name: 'ModifyComment',
-    component: ModifyComment
+    component: ModifyComment,
+    meta: { requiresAuth: true }
   },
   {
     path: '/login',
@@ -83,6 +84,15 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token');
+  if (to.matched.some(record => record.meta.requiresAuth) && !token) {
+    next({ name: 'LoginPage' });
+  } else {
+    next();
+  }
 });
 
 export default router;

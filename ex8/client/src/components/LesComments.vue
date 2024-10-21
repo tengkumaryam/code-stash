@@ -15,7 +15,7 @@
                 @input="handleInputChange" />
             <div v-if="selectedFilter === 'date'" class="date-filter">
                 <input type="date" v-model="startDate" placeholder="Start date" class="calendar" />
-                <input type="date" v-model="endDate" placeholder="End date" class="calendar"/>
+                <input type="date" v-model="endDate" placeholder="End date" class="calendar" />
             </div>
             <button class="clear-button" @click="clearSearch">x</button>
             <button class="search-button" @click="filterComments">Search</button>
@@ -27,14 +27,15 @@
 
         <div class="row">
             <div v-for="comment in paginatedComments" :key="comment.id" class="col-md-4">
-                <b-card-group columns id="my-data" :items="items" :per-page="perPage" :current-page="currentPage" small>
+                <!-- <b-card-group columns id="my-data" :items="items" :per-page="perPage" :current-page="currentPage" small> -->
                     <b-card class="card">
                         <h5 class="card-title">{{ comment.name }}</h5>
                         <b-button variant="primary" @click="viewDetails(comment.id)" class="view-button">View
                             details</b-button>
                         <b-button variant="danger" @click="deleteComment(comment.id)"
                             class="delete-button">Delete</b-button>
-                    </b-card></b-card-group>
+                    </b-card>
+                <!-- </b-card-group> -->
             </div>
         </div>
         <br><br>
@@ -164,12 +165,13 @@ export default {
         },
 
         async deleteComment(id) {
+            const confirmDeletion = confirm('Are you sure you want to delete the comment?');
+            if (!confirmDeletion) {
+                return;
+            }
             try {
-                const confirmDeletion = confirm('Are you sure you want to delete the comment?');
-                if (!confirmDeletion) {
-                    return;
-                }
-                const responses = await axios.delete(`http://192.168.107.121:4000/comments/${id}`);
+                const responses = await axios.delete(`http://192.168.107.121:4000/comments/${id}`)
+
                 if (responses.status == 200) {
                     alert('Comment deleted successfully!');
                     await this.fetchComments();

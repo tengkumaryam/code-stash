@@ -80,7 +80,6 @@ export default {
 
         async onSubmit(event) {
             event.preventDefault();
-
             const comment = {
                 id: this.form.id,
                 name: String(this.form.name),
@@ -88,14 +87,18 @@ export default {
                 body: String(this.form.body),
                 date_created: new Date()
             };
-
-            // Send details to API
+            const token = localStorage.getItem('token');
             try {
-                await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment);
+                // await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment);
+                await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 this.submitted = true;
                 alert('Comment updated!');
             } catch (error) {
-                console.error('Comment can\'t be updated', error);
+                console.error('Comment can\'t be updated',  error.response ? error.response.data : error);
             }
             this.onReset();
         },

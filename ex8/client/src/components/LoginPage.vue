@@ -2,13 +2,16 @@
     <div>
         <h1>LOGIN</h1>
         <form @submit.prevent="login">
-            <input v-model="username" placeholder="username" />
+            <input v-model="userId" placeholder="username" />
             <br />
             <br />
             <input v-model="password" placeholder="password" type="password" />
             <br />
             <br />
-            <button type="submit">Login</button>
+            <button type="submit" :disabled="loading">
+                <span v-if="loading">Logging in...</span>
+                <span v-else>Login</span>
+            </button>
         </form>
     </div>
 </template>
@@ -24,13 +27,12 @@ export default {
         };
     },
     methods: {
-        async login(e) {
-            e.preventDefault();
+        async login() {
             try {
-                const response = await api.post('/login', { userId: this.userId, password: this.password }); // authentication
-                localStorage.setItem('token', response.data.token); // store JWT in LocalStorage
+                const response = await api.post('/login', { userId: this.userId, password: this.password });
+                localStorage.setItem('token', response.data.token);
                 alert('Login successful!');
-                this.$router.push('/comments');
+                this.$router.push('/modify-comment');
             } catch (error) {
                 alert('Login failed!');
                 console.error(error);
