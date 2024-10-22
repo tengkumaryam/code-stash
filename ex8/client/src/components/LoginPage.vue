@@ -24,10 +24,21 @@ export default {
         return {
             userId: "",
             password: "",
+            loading: false,
         };
+    },
+    created() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please log in first!');
+            if (this.$route.path !== '/login') {
+                this.$router.push('/login'); 
+            }
+        }
     },
     methods: {
         async login() {
+            this.loading = true;
             try {
                 const response = await api.post('/login', { userId: this.userId, password: this.password });
                 localStorage.setItem('token', response.data.token);
@@ -36,6 +47,8 @@ export default {
             } catch (error) {
                 alert('Login failed!');
                 console.error(error);
+            } finally {
+                this.loading = false;
             }
         }
     }

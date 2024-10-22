@@ -27,7 +27,6 @@
 
         <div class="row">
             <div v-for="comment in paginatedComments" :key="comment.id" class="col-md-4">
-                <!-- <b-card-group columns id="my-data" :items="items" :per-page="perPage" :current-page="currentPage" small> -->
                     <b-card class="card">
                         <h5 class="card-title">{{ comment.name }}</h5>
                         <b-button variant="primary" @click="viewDetails(comment.id)" class="view-button">View
@@ -35,7 +34,6 @@
                         <b-button variant="danger" @click="deleteComment(comment.id)"
                             class="delete-button">Delete</b-button>
                     </b-card>
-                <!-- </b-card-group> -->
             </div>
         </div>
         <br><br>
@@ -142,9 +140,7 @@ export default {
         },
 
         saveKeyword() {
-            // const timer = 600000;
             localStorage.setItem('searchKeyword', this.keyword);
-            setTimeout(localStorage.removeItem('searchKeyword'), 10000);
         },
 
         loadSearch() {
@@ -165,7 +161,7 @@ export default {
         },
 
         async deleteComment(id) {
-            const confirmDeletion = confirm('Are you sure you want to delete the comment?');
+            const confirmDeletion = confirm('Are you sure you want to delete this comment?');
             if (!confirmDeletion) {
                 return;
             }

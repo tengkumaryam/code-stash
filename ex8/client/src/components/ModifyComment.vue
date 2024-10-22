@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form class="form" @submit="onSubmit" @reset="onReset" v-if="show">
+        <b-form class="form" @submit="onSubmit" @reset="onReset">
 
             <b-form-group id="input-group-1" label="Choose the ID:" label-for="input-1">
                 <b-form-select id="input-1" v-model="form.id" :options="listId" @change="onIdChange" required />
@@ -89,7 +89,6 @@ export default {
             };
             const token = localStorage.getItem('token');
             try {
-                // await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment);
                 await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -98,9 +97,10 @@ export default {
                 this.submitted = true;
                 alert('Comment updated!');
             } catch (error) {
-                console.error('Comment can\'t be updated',  error.response ? error.response.data : error);
+                console.error('Comment can\'t be updated', error.response ? error.response.data : error);
+            } finally {
+                this.onReset();
             }
-            this.onReset();
         },
 
         onReset(event) {

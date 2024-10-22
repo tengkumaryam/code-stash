@@ -11,6 +11,9 @@
           <router-link to="/modify-comment"> Modify </router-link>
         </div>
       </div>
+      <button class="logInOut" @click="isLoggedIn ? logout() : goToLogin()">
+        {{ isLoggedIn ? 'Logout' : 'Login' }} <!-- displays either "login" or "logout" -->
+      </button>
     </nav>
     <router-view></router-view>
     <footer class="footer">
@@ -23,6 +26,37 @@
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      debug: false,
+    };
+  },
+  computed: {
+    isLoggedIn() {
+      return !!localStorage.getItem('token'); // if token exists, returns true. updates automatically if token changes
+    }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('token');
+      alert('You have been logged out!');
+    },
+    goToLogin() {
+      this.$router.push('/login');
+    }
+  },
+  watch: {
+    isLoggedIn(newVal) {
+      console.log("Login state changed:", newVal); // logs new login state
+      this.debug = newVal; // sets debug to current login state
+    }
+  }
+};
+
+</script>
+
 
 <style>
 #app {
@@ -33,9 +67,10 @@
   color: #2c3e50;
 }
 
-html, body {
-    height: 100%; /* Ensure full height for the body */
-    margin: 0;    /* Remove default margin */
+html,
+body {
+  height: 100%;
+  margin: 0;
 }
 
 nav {
@@ -52,7 +87,7 @@ nav a {
 }
 
 nav a :hover {
-  color:aquamarine;
+  color: aquamarine;
 }
 
 nav a.router-link-exact-active {
@@ -92,24 +127,59 @@ nav a.router-link-exact-active {
   margin: 0 15px;
 }
 
+.logInOut {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logInOut {
+  background:
+    linear-gradient(
+      to right,
+      rgba(100, 200, 200, 1),
+      rgba(100, 200, 200, 1)
+    ),
+    linear-gradient(
+      to right,
+      rgba(255, 0, 0, 1),
+      rgba(255, 0, 180, 1),
+      rgba(0, 100, 200, 1)
+  );
+  background-size: 100% 3px, 0 3px;
+  background-position: 100% 100%, 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 400ms;
+}
+
+.logInOut:hover {
+  background-size: 0 3px, 100% 3px;
+  font-weight: bolder;
+  transition-duration: 0.5s;
+}
+
 .footer {
-    background-color: #92AA83;
-    width: 100%;
-    margin-top: 50px;
-    padding: 10px;
-    position: static;
+  background-color: #92AA83;
+  width: 100%;
+  margin-top: 50px;
+  padding: 10px;
+  position: static;
 }
 
 .github {
-    color: white;
-    font-style: italic;
-    text-decoration: none;
+  color: white;
+  font-style: italic;
+  text-decoration: none;
 
 }
 
 .github:hover {
-    text-decoration: underline;
-    color: #E7F59E;
+  text-decoration: underline;
+  color: #E7F59E;
 }
-
 </style>
