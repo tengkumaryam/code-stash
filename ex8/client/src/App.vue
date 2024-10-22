@@ -174,11 +174,11 @@ nav a.router-link-exact-active {
   color: white;
   font-style: italic;
   text-decoration: none;
-
 }
 
 .github:hover {
   text-decoration: underline;
   color: #E7F59E;
 }
+
 </style>
