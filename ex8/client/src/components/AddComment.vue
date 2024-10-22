@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-
+// import axios from 'axios';
+import axios from '../../../api/services/axios';
 
 export default {
     data() {
@@ -56,7 +56,7 @@ export default {
 
             // Send details to API
             try {
-                axios.post('http://192.168.107.121:4000/comments', comment);
+                axios.post('comments', comment);
                 this.submitted = true;
                 alert('Comment added!');
             } catch (error) {

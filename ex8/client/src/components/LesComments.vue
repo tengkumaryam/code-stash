@@ -27,13 +27,13 @@
 
         <div class="row">
             <div v-for="comment in paginatedComments" :key="comment.id" class="col-md-4">
-                    <b-card class="card">
-                        <h5 class="card-title">{{ comment.name }}</h5>
-                        <b-button variant="primary" @click="viewDetails(comment.id)" class="view-button">View
-                            details</b-button>
-                        <b-button variant="danger" @click="deleteComment(comment.id)"
-                            class="delete-button">Delete</b-button>
-                    </b-card>
+                <b-card class="card">
+                    <h5 class="card-title">{{ comment.name }}</h5>
+                    <b-button variant="primary" @click="viewDetails(comment.id)" class="view-button">View
+                        details</b-button>
+                    <b-button variant="danger" @click="deleteComment(comment.id)"
+                        class="delete-button">Delete</b-button>
+                </b-card>
             </div>
         </div>
         <br><br>
@@ -49,7 +49,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../../api/services/axios';
 const Fuse = require('fuse.js');
 
 export default {
@@ -87,7 +88,7 @@ export default {
     methods: {
         async fetchComments() {
             try {
-                const responses = await axios.get('http://192.168.107.121:4000/comments');
+                const responses = await axios.get('comments');
                 this.comments = responses.data;
                 this.filteredComments = this.comments;
             } catch (err) {
@@ -161,12 +162,23 @@ export default {
         },
 
         async deleteComment(id) {
+            // const token = localStorage.getItem('token');
+            // if (!token) {
+            //     this.$router.push('/login');
+            //     return;
+            // }
             const confirmDeletion = confirm('Are you sure you want to delete this comment?');
             if (!confirmDeletion) {
                 return;
             }
             try {
-                const responses = await axios.delete(`http://192.168.107.121:4000/comments/${id}`)
+                // const responses = await axios.delete(`http://192.168.107.121:4000/comments/${id}`, {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`
+                //     }
+                // });
+
+                const responses = await axios.delete(`comments/${id}`);
 
                 if (responses.status == 200) {
                     alert('Comment deleted successfully!');

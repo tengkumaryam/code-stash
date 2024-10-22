@@ -49,8 +49,7 @@ export default {
   },
   watch: {
     isLoggedIn(newVal) {
-      console.log("Login state changed:", newVal); // logs new login state
-      this.debug = newVal; // sets debug to current login state
+      this.debug = newVal; // sets to current login state
     }
   }
 };
@@ -160,7 +159,7 @@ nav a.router-link-exact-active {
 .logInOut:hover {
   background-size: 0 3px, 100% 3px;
   font-weight: bolder;
-  transition-duration: 0.5s;
+  transition-duration: 0.8s;
 }
 
 .footer {

@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../../api/services/axios';
 
 export default {
     data() {
@@ -58,7 +59,7 @@ export default {
     methods: {
         async fetchComments() {
             try {
-                const responses = await axios.get('http://192.168.107.121:4000/comments');
+                const responses = await axios.get('comments');
                 this.comments = responses.data;
                 this.listId = responses.data.map(comment => ({
                     value: comment.id,
@@ -87,17 +88,12 @@ export default {
                 body: String(this.form.body),
                 date_created: new Date()
             };
-            const token = localStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             try {
-                await axios.put(`http://192.168.107.121:4000/comments/${this.form.id}`, comment, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                this.submitted = true;
+                await axios.put(`comments/${this.form.id}`, comment);
                 alert('Comment updated!');
             } catch (error) {
-                console.error('Comment can\'t be updated', error.response ? error.response.data : error);
+                console.error('Comment can\'t be updated', error);
             } finally {
                 this.onReset();
             }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-card class="detailed-card">
+        <b-card class="detailed-card" v-if="comment">
             <strong>Id : </strong>
             {{ comment.id }}
             <br />
@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../../api/services/axios';
 
 export default {
     data() {
@@ -35,7 +36,7 @@ export default {
         async fetchDetails() {
             const id = this.$route.params.id;
             try {
-                const response = await axios.get(`http://192.168.107.121:4000/comments/${id}`);
+                const response = await axios.get(`comments/${id}`);
                 console.log('API Response:', response.data);
 
                 this.comment = response.data[0];

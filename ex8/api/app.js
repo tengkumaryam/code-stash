@@ -12,10 +12,10 @@ const authenticateToken = require('./services/authenticateToken');
 app.use(cors());
 app.use(express.json());
 
-// app.use(authenticateToken);
-const commentsRoute = require('./routes/comments');
-app.use('/modify-comment', authenticateToken, commentsRoute);
-app.use('/comments', commentsRoute); // public access to view comments
+app.use(authenticateToken);
+// const commentsRoute = require('./routes/comments');
+// app.use('/modify-comment', authenticateToken, commentsRoute);
+// app.use('/comments', commentsRoute); // public access to view comments
 
 const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf8');
 

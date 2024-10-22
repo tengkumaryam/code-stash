@@ -5,12 +5,12 @@ const authenticateToken = require('../services/authenticateToken')
 
 const basePath = "/comments"
 
-router.get(`${basePath}/`, commentsController.listComments);
-router.get(`${basePath}/:id`, commentsController.listCommentId);
-router.post(`${basePath}/`, commentsController.listNewComment);
+router.get(`${basePath}/`, authenticateToken, commentsController.listComments);
+router.get(`${basePath}/:id`, authenticateToken, commentsController.listCommentId);
+router.post(`${basePath}/`, authenticateToken, commentsController.listNewComment);
 router.put(`${basePath}/:id`, authenticateToken, commentsController.modifyComment);
-router.delete(`${basePath}/:id`, commentsController.deleteComment);
-router.get(`${basePath}/download/csv`, commentsController.downloadComment);
-// router.post(`login`, commentsController.modifyComment);
+router.delete(`${basePath}/:id`, authenticateToken, commentsController.deleteComment);
+router.get(`${basePath}/download/csv`, authenticateToken, commentsController.downloadComment);
+router.post(`login`, commentsController.modifyComment);
 
 module.exports = router;

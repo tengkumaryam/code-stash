@@ -7,7 +7,8 @@ import ErrorPage from '../views/ErrorPage.vue'
 import AddComment from '../components/AddComment.vue'
 import ModifyComment from '../components/ModifyComment.vue'
 import LoginPage from '../components/LoginPage.vue'
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../../api/services/axios';
 
 Vue.use(VueRouter)
 
@@ -28,15 +29,17 @@ const routes = [
   {
     path: '/comments',
     name: 'comments',
-    component: CommentsView
+    component: CommentsView,
+    meta: { requiresAuth: true }
   },
   {
     path: '/comments/:id',
     name: 'DetailsView',
     component: DetailsView,
+    meta: { requiresAuth: true },
     beforeEnter: async (to, from, next) => {
       const { id } = to.params;
-      await axios.get(`http://192.168.107.121:4000/comments/${id}`)
+      await axios.get(`comments/${id}`)
         .then(reponse => {
           if (reponse.status === 200) {
             next();
@@ -55,7 +58,8 @@ const routes = [
   {
     path: '/add-comment',
     name: 'AddComment',
-    component: AddComment
+    component: AddComment,
+    meta: { requiresAuth: true }
   },
   {
     path: '/modify-comment',
@@ -75,8 +79,7 @@ const routes = [
   },
   {
     path: '*',
-    name: 'ErrorPage',
-    component: ErrorPage
+    redirect: { name: 'ErrorPage' }
   },
 ];
 

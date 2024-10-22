@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import api from '../api';
+import axios from '../../../api/services/axios';
 
 export default {
     data() {
@@ -30,20 +30,17 @@ export default {
     created() {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert('Please log in first!');
-            if (this.$route.path !== '/login') {
-                this.$router.push('/login'); 
-            }
+            alert('Please log in!');
         }
     },
     methods: {
         async login() {
             this.loading = true;
             try {
-                const response = await api.post('/login', { userId: this.userId, password: this.password });
+                const response = await axios.post('/login', { userId: this.userId, password: this.password });
                 localStorage.setItem('token', response.data.token);
                 alert('Login successful!');
-                this.$router.push('/modify-comment');
+                this.$router.push('/comments');
             } catch (error) {
                 alert('Login failed!');
                 console.error(error);
