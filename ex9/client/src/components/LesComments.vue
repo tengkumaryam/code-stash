@@ -52,7 +52,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import axios from '../../../api/services/axios';
+// import axios from '../../../api/services/axios';
 const Fuse = require('fuse.js');
 
 export default {
@@ -157,11 +157,15 @@ export default {
                 return;
             }
             try {
-                const responses = await axios.delete(`comments/${id}`);
-                if (responses.status == 200) {
-                    alert('Comment deleted successfully!');
-                    await this.fetchComments();
-                }
+                // const responses = await axios.delete(`comments/${id}`);
+                await this.$store.dispatch('comments/deleteComment', id);
+                this.filteredComments = this.filteredComments.filter(comment => comment.id !== id);
+                alert('Comment deleted successfully!');
+                // if (responses) {
+                //     this.filteredComments = this.filteredComments.filter(comment => comment.id !== id);
+                //     alert('Comment deleted successfully!');
+                //     await this.fetchComments();
+                // }
             } catch (error) {
                 console.error("Can't delete comment :(", error);
             }
