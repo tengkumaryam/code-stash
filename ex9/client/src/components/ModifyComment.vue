@@ -34,7 +34,8 @@
 
 <script>
 // import axios from 'axios';
-import axios from '../../../api/services/axios';
+import { mapGetters, mapActions } from 'vuex';
+// import axios from '../../../api/services/axios';
 
 export default {
     data() {
@@ -46,22 +47,29 @@ export default {
                 body: ''
             },
             listId: [],
-            comments: [],
-            show: true,
+            // comments: [],
+            // show: true,
             submitted: false
         };
     },
 
+    computed: {
+        ...mapGetters(['getAllComments']),
+    },
+
     created() {
-        this.fetchComments();
+        this.loadComments();
     },
 
     methods: {
-        async fetchComments() {
+        ...mapActions(['fetchComments', 'modifyComment']),
+        async loadComments() {
             try {
-                const responses = await axios.get('comments');
-                this.comments = responses.data;
-                this.listId = responses.data.map(comment => ({
+                // const responses = await axios.get('comments');
+                // this.comments = responses.data;
+                await this.fetchComments();
+                // this.listId = responses.data.map(comment => ({
+                this.listId = this.getAllComments.map(comment => ({
                     value: comment.id,
                     text: comment.id
                 }));
@@ -71,7 +79,8 @@ export default {
         },
 
         async onIdChange(id) {
-            const comment = this.comments.find(comment => comment.id === id); // finds id match
+            // const comment = this.comments.find(comment => comment.id === id); // finds id match
+            const comment = this.getAllComments.find(comment => comment.id === id);
             if (comment) {
                 this.form.name = comment.name;
                 this.form.email = comment.email;
@@ -88,14 +97,17 @@ export default {
                 body: String(this.form.body),
                 date_created: new Date()
             };
-            try {
-                await axios.put(`comments/${this.form.id}`, comment);
-                alert('Comment updated!');
-            } catch (error) {
-                console.error('Comment can\'t be updated', error);
-            } finally {
-                this.onReset();
-            }
+            await this.modifyComment(comment);
+            alert('Comment updated!');
+            this.onReset();
+            // try {
+            //     await axios.put(`comments/${this.form.id}`, comment);
+            //     alert('Comment updated!');
+            // } catch (error) {
+            //     console.error('Comment can\'t be updated', error);
+            // } finally {
+            //     this.onReset();
+            // }
         },
 
         onReset(event) {
@@ -113,9 +125,9 @@ export default {
             this.show = true;
 
             // Return to form once submitted
-            this.$nextTick(() => {
-                this.show = true;
-            });
+            // this.$nextTick(() => {
+            //     this.show = true;
+            // });
         }
     }
 }

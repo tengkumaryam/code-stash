@@ -39,25 +39,26 @@
         <br><br>
 
         <div>
-            <a href="http://192.168.107.121:4000/comments/download/csv" download class="download"> <svg
-                    xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 384 512" fill="currentColor">
+            <a href="http://192.168.107.121:4000/comments/download/csv" download class="download">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 384 512"
+                    fill="currentColor">
                     <path
                         d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM216 232l0 102.1 31-31c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-72 72c-9.4 9.4-24.6 9.4-33.9 0l-72-72c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l31 31L168 232c0-13.3 10.7-24 24-24s24 10.7 24 24z" />
-                </svg>Click here to download all comments in CSV</a>
+                </svg>Click here to download all comments in CSV
+            </a>
         </div>
     </div>
 </template>
 
 <script>
-import axios from '../../../api/services/axios';
 import { mapGetters, mapActions } from 'vuex';
+import axios from '../../../api/services/axios';
 const Fuse = require('fuse.js');
 
 export default {
     name: 'LesComments',
     data() {
         return {
-            // comments: [],
             filteredComments: [],
             keyword: '',
             perPage: 18,
@@ -68,11 +69,11 @@ export default {
         };
     },
     created() {
-        this.fetchComments();
+        this.loadComments();
         this.loadSearch();
     },
     computed: {
-        ...mapGetters(['getAllComments']), // fetch comments from store
+        ...mapGetters('comments', ['getAllComments']), // makes the getAllComments getter from vuex store's ("comments" module) accessible as a property
         rows() {
             return this.filteredComments.length;
         },
@@ -87,7 +88,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['fetchComments']),
+        ...mapActions('comments', ['fetchComments']),
+        async loadComments() {
+            await this.fetchComments();
+            this.filteredComments = this.getAllComments;
+        },
 
         handleInputChange(e) {
             if (e.target.value) {
@@ -99,12 +104,10 @@ export default {
 
         clearSearch() {
             this.keyword = '';
-            this.filteredComments = this.comments;
         },
 
         filterComments() {
-            this.filteredComments = this.comments;
-
+            this.filteredComments = [...this.getAllComments]; // copy all comments
             if (this.selectedFilter === 'date') {
                 const start = new Date(this.startDate).getTime();
                 const end = new Date(this.endDate).getTime();
@@ -115,20 +118,19 @@ export default {
                 if (this.filteredComments.length === 0) {
                     alert(`Sorry, no comments dated from ${this.startDate} to ${this.endDate} found`);
                 }
-            }
-            else {
+            } else {
                 const options = {
                     keys: [this.selectedFilter],
                     threshold: 0.0,
                     findAllMatches: false,
                     ignoreLocation: true,
                 };
-                const fuse = new Fuse(this.comments, options);
+                const fuse = new Fuse(this.getAllComments, options);
                 const result = fuse.search(this.keyword);
-                if (result.length == 0) {
+                this.filteredComments = result.map(item => item.item);
+                if (this.filteredComments.length === 0) {
                     alert(`Sorry, no comments with ${this.selectedFilter} = "${this.keyword}" were found`);
                 }
-                this.filteredComments = result.map(item => item.item);
             }
 
         },
@@ -139,15 +141,10 @@ export default {
 
         loadSearch() {
             const lastSearch = localStorage.getItem('searchKeyword');
-            localStorage.getItem('searchKeyword')
             if (lastSearch) {
                 this.keyword = lastSearch;
                 this.filterComments();
             }
-        },
-
-        loadComments() {
-            this.fetchComments();
         },
 
         viewDetails(id) {
@@ -155,7 +152,6 @@ export default {
         },
 
         async deleteComment(id) {
-
             const confirmDeletion = confirm('Are you sure you want to delete this comment?');
             if (!confirmDeletion) {
                 return;
@@ -173,6 +169,7 @@ export default {
     }
 };
 </script>
+
 
 <style scoped>
 .pageNumbers {

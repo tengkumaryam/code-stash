@@ -88,12 +88,10 @@ export default {
 </script>
 
 <style scoped>
-
 .form {
     width: 90%;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-
 </style>

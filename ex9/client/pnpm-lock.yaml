@@ -36,8 +36,8 @@ importers:
         specifier: ^3.6.5
         version: 3.6.5(vue@2.7.16)
       vuex:
-        specifier: ^4.1.0
-        version: 4.1.0(vue@2.7.16)
+        specifier: ^3.6.2
+        version: 3.6.2(vue@2.7.16)
     devDependencies:
       '@babel/core':
         specifier: ^7.12.16
@@ -1017,9 +1017,6 @@ packages:
 
   '@vue/component-compiler-utils@3.3.0':
     resolution: {integrity: sha512-97sfH2mYNU+2PzGrmK2haqffDpVASuib9/w2/noxiFi31Z54hW+q3izKQXXQZSNhtiUpAI36uSuYepeBe4wpHQ==}
-
-  '@vue/devtools-api@6.6.4':
-    resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
 
   '@vue/shared@3.5.11':
     resolution: {integrity: sha512-W8GgysJVnFo81FthhzurdRAWP/byq3q2qIw70e0JWblzVhjgOMiC2GyovXrZTFQJnFVryYaKGP3Tc9vYzYm6PQ==}
@@ -3741,10 +3738,10 @@ packages:
     resolution: {integrity: sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==}
     deprecated: Vue 2 has reached EOL and is no longer actively maintained. See https://v2.vuejs.org/eol/ for more details.
 
-  vuex@4.1.0:
-    resolution: {integrity: sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==}
+  vuex@3.6.2:
+    resolution: {integrity: sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==}
     peerDependencies:
-      vue: ^3.2.0
+      vue: ^2.0.0
 
   watchpack@2.4.2:
     resolution: {integrity: sha512-TnbFSbcOCcDgjZ4piURLCbJ3nJhznVh9kw6F6iokjiFPl8ONxe9A6nMDVXDiNbrSfLILs6vB07F7wLBrwPYzJw==}
@@ -5358,8 +5355,6 @@ snapshots:
       - velocityjs
       - walrus
       - whiskers
-
-  '@vue/devtools-api@6.6.4': {}
 
   '@vue/shared@3.5.11': {}
 
@@ -8021,9 +8016,8 @@ snapshots:
       '@vue/compiler-sfc': 2.7.16
       csstype: 3.1.3
 
-  vuex@4.1.0(vue@2.7.16):
+  vuex@3.6.2(vue@2.7.16):
     dependencies:
-      '@vue/devtools-api': 6.6.4
       vue: 2.7.16
 
   watchpack@2.4.2:
