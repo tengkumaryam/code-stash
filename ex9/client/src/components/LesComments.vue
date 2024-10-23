@@ -73,7 +73,7 @@ export default {
         this.loadSearch();
     },
     computed: {
-        ...mapGetters('comments', ['getAllComments']), // makes the getAllComments getter from vuex store's ("comments" module) accessible as a property
+        ...mapGetters('comments', ['getAllComments']), // makes the getAllComments getter from vuex store's (from "comments" module) accessible as a property
         rows() {
             return this.filteredComments.length;
         },
@@ -127,10 +127,10 @@ export default {
                 };
                 const fuse = new Fuse(this.getAllComments, options);
                 const result = fuse.search(this.keyword);
-                this.filteredComments = result.map(item => item.item);
                 if (this.filteredComments.length === 0) {
                     alert(`Sorry, no comments with ${this.selectedFilter} = "${this.keyword}" were found`);
                 }
+                this.filteredComments = result.map(item => item.item);
             }
 
         },

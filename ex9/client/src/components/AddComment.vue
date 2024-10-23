@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import axios from '../../../api/services/axios';
+// import axios from '../../../api/services/axios';
+import { mapActions } from 'vuex';
 
 export default {
     data() {
@@ -44,7 +45,8 @@ export default {
     },
 
     methods: {
-        onSubmit(event) {
+        ...mapActions('comments', ['createComment']),
+        async onSubmit(event) {
             event.preventDefault();
 
             const comment = {
@@ -55,7 +57,8 @@ export default {
 
             // Send details to API
             try {
-                axios.post('comments', comment);
+                // axios.post('comments', comment);
+                await this.createComment(comment);
                 this.submitted = true;
                 alert('Comment added!');
             } catch (error) {
@@ -88,10 +91,12 @@ export default {
 </script>
 
 <style scoped>
+
 .form {
     width: 90%;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
+
 </style>
