@@ -4,13 +4,14 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
       <div class="dropdown">
-        <router-link to="#" class="dropbtn">Comments</router-link>
+        <router-link to="#" class="dropbtn">Comments</router-link> |
         <div class="dropdown-content">
           <router-link to="/comments"> View all </router-link>
           <router-link to="/add-comment"> Add new </router-link>
           <router-link to="/modify-comment"> Modify </router-link>
         </div>
       </div>
+      <router-link to="/noti"> Notifications </router-link>
       <button class="logInOut" @click="isLoggedIn ? logout() : goToLogin()">
         {{ isLoggedIn ? 'Logout' : 'Login' }} <!-- displays either "login" or "logout" -->
       </button>

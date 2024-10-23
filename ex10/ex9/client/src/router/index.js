@@ -7,7 +7,7 @@ import ErrorPage from '../views/ErrorPage.vue'
 import AddComment from '../components/AddComment.vue'
 import ModifyComment from '../components/ModifyComment.vue'
 import LoginPage from '../components/LoginPage.vue'
-// import axios from 'axios';
+import NotifSocket from '../components/NotifSocket.vue'
 import axios from '../../../api/services/axios';
 
 Vue.use(VueRouter)
@@ -66,6 +66,11 @@ const routes = [
     name: 'ModifyComment',
     component: ModifyComment,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/noti',
+    name: 'NotifSocket',
+    component: NotifSocket,
   },
   {
     path: '/login',

@@ -52,7 +52,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-// import axios from '../../../api/services/axios';
 const Fuse = require('fuse.js');
 
 export default {
