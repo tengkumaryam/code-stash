@@ -1,15 +1,15 @@
 import axios from '../../../api/services/axios'
 
-const state = {
+const state = { // initialise
     comments: [],
 };
 
-const getters = {
+const getters = { // to retrieve data from store
     getAllComments: (state) => state.comments,
     getCommentById: (state) => (id) => state.comments.find(comment => comment.id === id),
 };
 
-const mutations = {
+const mutations = { // change state (data)
     setComments(state, comments) {
         state.comments = comments;
     },
@@ -18,18 +18,18 @@ const mutations = {
     },
 };
 
-const actions = {
+const actions = { // async operations
     async fetchComments({ commit }) {
         try {
             const response = await axios.get('comments');
-            commit('setComments', response.data);
+            commit('setComments', response.data); // call mutation to change state
         } catch (error) {
             console.error('Error fetching comments:', error);
         }
     },
-    async createComment({ commit }, commentData) {
+    async createComment({ commit }, newComment) {
         try {
-            const response = await axios.post('comments', commentData);
+            const response = await axios.post('comments', newComment);
             commit('addComment', response.data);
         } catch (error) {
             console.error('Error adding comment:', error);
