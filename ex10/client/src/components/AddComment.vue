@@ -28,7 +28,6 @@
 </template>
 
 <script>
-// import axios from '../../../api/services/axios';
 import { mapActions } from 'vuex';
 import { io } from 'socket.io-client';
 
@@ -40,24 +39,21 @@ export default {
                 email: '',
                 body: ''
             },
+            socket: null,
             show: true,
             submitted: false
         };
     },
 
-    sockets: {
-        connect() {
-            console.log('Connected to server');
-        },
-        disconnect() {
-            console.log('Disconnected from server');
-        },
-    },
-
     created() {
         this.socket = io('http://192.168.107.121:3000');
+
         this.socket.on('connect', () => {
-            console.log('Socket connected');
+            console.log('Connected to server');
+        });
+
+        this.socket.on('disconnect', () => {
+            console.log('Disconnected from server');
         });
     },
 
@@ -74,7 +70,6 @@ export default {
 
             // Send details to API
             try {
-                // axios.post('comments', comment);
                 await this.createComment(comment);
                 this.submitted = true;
                 this.socket.emit('newComment', `A new comment named "${this.form.name}" was added`);

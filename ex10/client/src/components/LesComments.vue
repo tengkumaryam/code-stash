@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <!-- <NotifSocket ref="NotifSocket" /> -->
         <div class="searchinput-container">
             <div class="filter">
                 <select v-model="selectedFilter">
@@ -68,24 +67,22 @@ export default {
             selectedFilter: 'id',
             startDate: '',
             endDate: '',
+            socket: null,
         };
-    },
-
-    sockets: {
-        connect() {
-            console.log('Connected to server');
-        },
-        disconnect() {
-            console.log('Disconnected from server');
-        },
     },
 
     created() {
         this.loadComments();
         this.loadSearch();
+
         this.socket = io('http://192.168.107.121:3000');
+
         this.socket.on('connect', () => {
-            console.log('Socket connected');
+            console.log('Connected to server');
+        });
+
+        this.socket.on('disconnect', () => {
+            console.log('Disconnected from server');
         });
     },
 
@@ -104,7 +101,7 @@ export default {
             return result;
         }
     },
-    
+
     methods: {
         ...mapActions('comments', ['fetchComments']),
         async loadComments() {
@@ -145,8 +142,9 @@ export default {
                 };
                 const fuse = new Fuse(this.getAllComments, options);
                 const result = fuse.search(this.keyword);
-                if (this.filteredComments.length === 0) {
-                    alert(`Sorry, no comments with ${this.selectedFilter} = "${this.keyword}" were found`);
+                if (result.length === 0) {
+                    alert(`Sorry, no comments with ${this.selectedFilter} : ${this.keyword} were found`);
+                    this.filteredComments = [...this.getAllComments];
                 }
                 this.filteredComments = result.map(item => item.item);
             }
@@ -177,8 +175,7 @@ export default {
             try {
                 await this.$store.dispatch('comments/deleteComment', id);
                 this.filteredComments = this.filteredComments.filter(comment => comment.id !== id);
-                console.log(`Emitting deleteComment for ID ${id}`);
-                this.socket.emit('deleteComment', `Comment with ID ${id} was deleted`);
+                this.socket.emit('deleteComment', `Comment (ID: ${id}) was deleted`);
                 alert('Comment deleted successfully!');
             } catch (error) {
                 console.error("Can't delete comment :(", error);
@@ -265,8 +262,8 @@ select:hover {
 
 .clear-button {
     position: absolute;
-    right: 20%;
-    top: 25%;
+    right: 38%;
+    top: 25.5%;
     justify-content: center;
     align-items: center;
     width: 16px;

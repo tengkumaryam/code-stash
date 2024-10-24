@@ -34,6 +34,7 @@
 
 <script>
 import axios from '../../../api/services/axios';
+import { io } from 'socket.io-client';
 
 export default {
     data() {
@@ -46,6 +47,7 @@ export default {
             },
             listId: [],
             comments: [],
+            socket: null,
             show: true,
             submitted: false
         };
@@ -53,6 +55,15 @@ export default {
 
     created() {
         this.fetchComments();
+        this.socket = io('http://192.168.107.121:3000');
+        
+        this.socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        this.socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
     },
 
     methods: {
@@ -89,6 +100,7 @@ export default {
             };
             try {
                 await axios.put(`comments/${this.form.id}`, comment);
+                this.socket.emit('editComment', `Comment (ID:${this.form.id}) was edited`);
                 alert('Comment updated!');
             } catch (error) {
                 console.error('Comment can\'t be updated', error);
