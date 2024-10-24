@@ -36,6 +36,10 @@ io.on('connection', (socket) => {
         io.emit('commentAdded', comment);
     });
 
+    socket.on('editComment', (comment) => {
+        io.emit('commentEdited', comment);
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });
