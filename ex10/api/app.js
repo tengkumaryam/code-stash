@@ -11,34 +11,34 @@ const authenticateToken = require('./services/authenticateToken');
 
 const http = require('http');
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: 'http://192.168.107.121:8080', 
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true 
+    }
+});
 
 app.use(cors());
 app.use(express.json());
 app.use(authenticateToken);
-
-// app.use(cors({
-//     origin: 'http://192.168.107.121:8080',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     credentials: true
-// }));
 
 const privateKey = fs.readFileSync('./keys/private_key.pem', 'utf8');
 
 io.on('connection', (socket) => {
     console.log('User connected');
 
+    socket.on('deleteComment', (commentId) => {
+        io.emit('commentDeleted', commentId);
+    });
+
+    socket.on('newComment', (comment) => {
+        io.emit('commentAdded', comment);
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });
-
-    // socket.on('addComment', (comment) => {
-    //     io.emit('commentAdded', comment);
-    // });
-
-    // socket.on('deleteComment', (commentId) => {
-    //     io.emit('commentDeleted', commentId);
-    // });
 });
 
 app.post("/login", (req, res) => {

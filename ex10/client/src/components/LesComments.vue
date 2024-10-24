@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <!-- <NotifSocket ref="NotifSocket" /> -->
         <div class="searchinput-container">
             <div class="filter">
                 <select v-model="selectedFilter">
@@ -52,10 +53,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { io } from 'socket.io-client';
 const Fuse = require('fuse.js');
 
 export default {
     name: 'LesComments',
+
     data() {
         return {
             filteredComments: [],
@@ -65,10 +68,9 @@ export default {
             selectedFilter: 'id',
             startDate: '',
             endDate: '',
-            message: '',
-            messages: []
         };
     },
+
     sockets: {
         connect() {
             console.log('Connected to server');
@@ -77,10 +79,16 @@ export default {
             console.log('Disconnected from server');
         },
     },
+
     created() {
         this.loadComments();
         this.loadSearch();
+        this.socket = io('http://192.168.107.121:3000');
+        this.socket.on('connect', () => {
+            console.log('Socket connected');
+        });
     },
+
     computed: {
         ...mapGetters('comments', ['getAllComments']), // makes the getAllComments getter from vuex store's (from "comments" module) accessible as a property
         rows() {
@@ -96,6 +104,7 @@ export default {
             return result;
         }
     },
+    
     methods: {
         ...mapActions('comments', ['fetchComments']),
         async loadComments() {
@@ -168,18 +177,14 @@ export default {
             try {
                 await this.$store.dispatch('comments/deleteComment', id);
                 this.filteredComments = this.filteredComments.filter(comment => comment.id !== id);
+                console.log(`Emitting deleteComment for ID ${id}`);
+                this.socket.emit('deleteComment', `Comment with ID ${id} was deleted`);
                 alert('Comment deleted successfully!');
             } catch (error) {
                 console.error("Can't delete comment :(", error);
             }
         },
-        
-        sendMessage() {
-            if (this.message.trim() !== '') {
-                this.$socket.emit('addComment', this.message);
-                this.message = '';
-            }
-        }
+
     }
 };
 </script>
